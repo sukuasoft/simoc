@@ -1,8 +1,8 @@
-# 🖥️ SIMOC - Sistema de Monitoramento Corporativo
+# SIMOC - Sistema de Monitoramento Corporativo
 
 Sistema Inteligente de Monitoramento de Infraestruturas de Redes, capaz de verificar automaticamente o estado de servidores, routers, switches, APIs, domínios, portas e outros serviços.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 - **Monitoramento Automático**: Verificação contínua de dispositivos e serviços
 - **Dashboard em Tempo Real**: Gráficos, logs, estatísticas e status
@@ -10,7 +10,7 @@ Sistema Inteligente de Monitoramento de Infraestruturas de Redes, capaz de verif
 - **Autenticação Segura**: Integração com Supabase Auth
 - **Histórico Completo**: Logs de monitoramento e alertas
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 ### Backend
 - **Node.js + Express + TypeScript**
@@ -124,7 +124,7 @@ yarn dev
 | `GET` | `/health` | Status da API |
 | `GET` | `/api` | Informações da API |
 
-## 🏗️ Arquitetura DDD
+## Arquitetura DDD
 
 ### Domain Layer
 - **Entities**: Device, User, Alert, MonitoringLog
