@@ -1,4 +1,4 @@
-import { DeviceType, CheckType } from '../../domain/entities/device';
+import { CheckType, DeviceType } from "../../domain/entities/Device";
 
 export interface CreateDeviceDTO {
   name: string;

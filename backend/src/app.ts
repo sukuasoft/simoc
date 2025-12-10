@@ -5,9 +5,12 @@ import cors from 'cors';
 import { PrismaDeviceRepository } from './infrastructure/repositories/PrismaDeviceRepository';
 import { PrismaMonitoringLogRepository } from './infrastructure/repositories/PrismaMonitoringLogRepository';
 import { PrismaAlertRepository } from './infrastructure/repositories/PrismaAlertRepository';
+import { PrismaUserRepository } from './infrastructure/repositories/PrismaUserRepository';
 import { NotificationService } from './infrastructure/services/notifications/NotificationService';
 import { HealthChecker } from './infrastructure/services/monitoring/HealthChecker';
 import { MonitoringScheduler } from './infrastructure/services/monitoring/MonitoringScheduler';
+import { JwtService } from './infrastructure/services/auth/JwtService';
+import { PasswordService } from './infrastructure/services/auth/PasswordService';
 import prisma from './infrastructure/database/prisma';
 
 // Use Cases - Device
@@ -25,15 +28,21 @@ import { GetDeviceLogsUseCase } from './application/use-cases/monitoring/GetDevi
 import { SendAlertUseCase } from './application/use-cases/alert/SendAlertUseCase';
 import { ListAlertsUseCase } from './application/use-cases/alert/ListAlertsUseCase';
 
+// Use Cases - Auth
+import { RegisterUseCase } from './application/use-cases/auth/RegisterUseCase';
+import { LoginUseCase } from './application/use-cases/auth/LoginUseCase';
+
 // Controllers
 import { DeviceController } from './interfaces/controllers/DeviceController';
 import { MonitoringController } from './interfaces/controllers/MonitoringController';
 import { AlertController } from './interfaces/controllers/AlertController';
+import { AuthController } from './interfaces/controllers/AuthController';
 
 // Routes
 import { DeviceRoutes } from './interfaces/routes/DeviceRoutes';
 import { MonitoringRoutes } from './interfaces/routes/MonitoringRoutes';
 import { AlertRoutes } from './interfaces/routes/AlertRoutes';
+import { AuthRoutes } from './interfaces/routes/AuthRoutes';
 
 // Middlewares
 import { errorMiddleware, notFoundMiddleware } from './interfaces/middlewares/errorMiddleware';
@@ -62,10 +71,13 @@ class App {
     const deviceRepository = new PrismaDeviceRepository();
     const monitoringLogRepository = new PrismaMonitoringLogRepository();
     const alertRepository = new PrismaAlertRepository();
+    const userRepository = new PrismaUserRepository();
 
     // Services
     const notificationService = new NotificationService();
     const healthChecker = new HealthChecker();
+    const jwtService = new JwtService();
+    const passwordService = new PasswordService();
 
     // Use Cases - Device
     const createDeviceUseCase = new CreateDeviceUseCase(deviceRepository);
@@ -90,6 +102,10 @@ class App {
     const sendAlertUseCase = new SendAlertUseCase(alertRepository, notificationService);
     const listAlertsUseCase = new ListAlertsUseCase(alertRepository);
 
+    // Use Cases - Auth
+    const registerUseCase = new RegisterUseCase(userRepository, jwtService, passwordService);
+    const loginUseCase = new LoginUseCase(userRepository, jwtService, passwordService);
+
     // Controllers
     const deviceController = new DeviceController(
       createDeviceUseCase,
@@ -103,13 +119,19 @@ class App {
       getDeviceLogsUseCase
     );
     const alertController = new AlertController(sendAlertUseCase, listAlertsUseCase);
+    const authController = new AuthController(
+      registerUseCase,
+      loginUseCase
+    );
 
     // Routes
     const deviceRoutes = new DeviceRoutes(deviceController);
     const monitoringRoutes = new MonitoringRoutes(monitoringController);
     const alertRoutes = new AlertRoutes(alertController);
+    const authRoutes = new AuthRoutes(authController);
 
     // API Routes
+    this.app.use('/api/auth', authRoutes.router);
     this.app.use('/api/devices', deviceRoutes.router);
     this.app.use('/api/monitoring', monitoringRoutes.router);
     this.app.use('/api/alerts', alertRoutes.router);

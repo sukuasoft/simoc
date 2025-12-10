@@ -1,7 +1,6 @@
-import { User, UserProps, UserRole } from '../../domain/entities/User';
+import { User } from 'domain/entities/User';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import prisma from '../database/prisma';
-import { UserRole as PrismaUserRole } from '@prisma/client';
 
 export class PrismaUserRepository implements IUserRepository {
   private mapToDomain(data: any): User {
@@ -10,7 +9,7 @@ export class PrismaUserRepository implements IUserRepository {
       email: data.email,
       name: data.name,
       phone: data.phone,
-      role: data.role.toLowerCase() as UserRole,
+      password: data.password,
       isActive: data.isActive,
       notifyByEmail: data.notifyByEmail,
       notifyBySms: data.notifyBySms,
@@ -19,15 +18,14 @@ export class PrismaUserRepository implements IUserRepository {
     });
   }
 
-  async save(user: User, password: string): Promise<User> {
+  async save(user: User): Promise<User> {
     const data = await prisma.user.create({
       data: {
         id: user.id,
         email: user.email,
         name: user.name,
-        password: password,
+        password: user.password,
         phone: user.phone,
-        role: user.role.toUpperCase() as PrismaUserRole,
         isActive: user.isActive,
         notifyByEmail: user.notifyByEmail,
         notifyBySms: user.notifyBySms,
@@ -65,7 +63,7 @@ export class PrismaUserRepository implements IUserRepository {
     const data = await prisma.user.findMany({
       orderBy: { createdAt: 'desc' },
     });
-    return data.map(d => this.mapToDomain(d));
+    return data.map((d: any) => this.mapToDomain(d));
   }
 
   async update(user: User): Promise<User> {
@@ -74,7 +72,6 @@ export class PrismaUserRepository implements IUserRepository {
       data: {
         name: user.name,
         phone: user.phone,
-        role: user.role.toUpperCase() as PrismaUserRole,
         isActive: user.isActive,
         notifyByEmail: user.notifyByEmail,
         notifyBySms: user.notifyBySms,

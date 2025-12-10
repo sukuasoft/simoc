@@ -1,8 +1,8 @@
-import { MonitoringLog } from '../../domain/entities/MonitoringLog';
+import { MonitoringLog } from 'domain/entities/monitoring-log';
 import { DeviceStatus } from '../../domain/entities/Device';
-import { IMonitoringLogRepository } from '../../domain/repositories/IMonitoringLogRepository';
 import prisma from '../database/prisma';
 import { DeviceStatus as PrismaDeviceStatus } from '@prisma/client';
+import { IMonitoringLogRepository } from 'domain/repositories/monitoring-log-repository';
 
 export class PrismaMonitoringLogRepository implements IMonitoringLogRepository {
   private mapToDomain(data: any): MonitoringLog {

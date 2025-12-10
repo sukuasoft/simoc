@@ -1,18 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-import { hash } from 'crypto';
+import {PasswordService} from "../src/infrastructure/services/auth/PasswordService";
 
 const prisma = new PrismaClient();
 
-async function hashPassword(password: string): Promise<string> {
-  // Simple hash for demo - in production use bcrypt
-  return Buffer.from(password).toString('base64');
-}
+const passwordService = new PasswordService();
 
 async function main() {
   console.log('🌱 Seeding database...');
 
   // Create admin user
-  const adminPassword = await hashPassword('admin123');
+  const adminPassword = await passwordService.hash('admin123');
   const admin = await prisma.user.upsert({
     where: { email: 'admin@simoc.local' },
     update: {},
@@ -20,7 +17,6 @@ async function main() {
       email: 'admin@simoc.local',
       name: 'Administrator',
       password: adminPassword,
-      role: 'ADMIN',
       isActive: true,
       notifyByEmail: true,
       notifyBySms: false,
@@ -90,7 +86,6 @@ async function main() {
 main()
   .catch((e) => {
     console.error('❌ Seeding failed:', e);
-    process.exit(1);
   })
   .finally(async () => {
     await prisma.$disconnect();

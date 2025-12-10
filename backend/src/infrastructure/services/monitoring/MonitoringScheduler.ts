@@ -1,11 +1,12 @@
 import cron from 'node-cron';
-import { IDeviceRepository } from '../../../domain/repositories/device-repository';
-import { IMonitoringLogRepository } from '../../../domain/repositories/monitoring-log-repository';
-import { IAlertRepository } from '../../../domain/repositories/alert-repository';
-import { CheckDeviceHealthUseCase } from '../../../application/use-cases/monitoring/CheckDeviceHealthUseCase';
-import { SendAlertUseCase, INotificationService } from '../../../application/use-cases/alert/SendAlertUseCase';
-import { HealthChecker } from './HealthChecker';
-import { Device, DeviceStatus } from '../../../domain/entities/device';
+import type { Device, DeviceStatus } from '../../../domain/entities/device.js';
+import { CheckDeviceHealthUseCase } from '../../../application/use-cases/monitoring/CheckDeviceHealthUseCase.js';
+import { SendAlertUseCase, type INotificationService } from '../../../application/use-cases/alert/SendAlertUseCase.js';
+import type { IDeviceRepository } from '../../../domain/repositories/device-repository.js';
+import type { IMonitoringLogRepository } from '../../../domain/repositories/monitoring-log-repository.js';
+import type { IAlertRepository } from '../../../domain/repositories/alert-repository.js';
+import { HealthChecker } from './HealthChecker.js';
+
 
 export class MonitoringScheduler {
   private scheduledTasks: Map<string, cron.ScheduledTask> = new Map();

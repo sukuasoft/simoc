@@ -1,0 +1,589 @@
+{
+  "info": {
+    "name": "SIMOC API",
+    "description": "Sistema de Monitoramento Corporativo - API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Autenticação - Login e Registro",
+      "item": [
+        {
+          "name": "Registrar Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', response.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@simoc.com\",\n  \"password\": \"admin123\",\n  \"phone\": \"+5511999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Registra um novo usuário no sistema"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', response.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@simoc.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Faz login e retorna token de acesso"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Retorna informações do usuário logado"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Devices",
+      "description": "Gerenciamento de Dispositivos de Rede",
+      "item": [
+        {
+          "name": "Criar Dispositivo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Router Principal\",\n  \"type\": \"ROUTER\",\n  \"ip\": \"192.168.1.1\",\n  \"port\": 80,\n  \"checkType\": \"PING\",\n  \"checkInterval\": 60,\n  \"description\": \"Router principal do escritório\",\n  \"location\": \"Sala de Servidores\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices"]
+            },
+            "description": "Cria um novo dispositivo para monitoramento"
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Switch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Switch Core\",\n  \"type\": \"SWITCH\",\n  \"ip\": \"192.168.1.2\",\n  \"port\": 161,\n  \"checkType\": \"PING\",\n  \"checkInterval\": 120,\n  \"description\": \"Switch principal 48 portas\",\n  \"location\": \"Rack 1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Servidor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Servidor Web\",\n  \"type\": \"SERVER\",\n  \"ip\": \"192.168.1.10\",\n  \"port\": 443,\n  \"checkType\": \"HTTP\",\n  \"checkInterval\": 30,\n  \"description\": \"Servidor de aplicações web\",\n  \"location\": \"Data Center\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos Dispositivos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices"]
+            },
+            "description": "Lista todos os dispositivos cadastrados"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar por Status (Online)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices/status/ONLINE",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices", "status", "ONLINE"]
+            },
+            "description": "Lista dispositivos online"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar por Status (Offline)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices/status/OFFLINE",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices", "status", "OFFLINE"]
+            },
+            "description": "Lista dispositivos offline"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar por Tipo (Router)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices/type/ROUTER",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices", "type", "ROUTER"]
+            },
+            "description": "Lista dispositivos do tipo Router"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "DEVICE_ID_HERE",
+                  "description": "ID do dispositivo"
+                }
+              ]
+            },
+            "description": "Busca um dispositivo específico pelo ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Dispositivo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Router Principal - Atualizado\",\n  \"checkInterval\": 30,\n  \"description\": \"Router principal - configuração atualizada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/devices/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "DEVICE_ID_HERE"
+                }
+              ]
+            },
+            "description": "Atualiza informações de um dispositivo"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Dispositivo",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "DEVICE_ID_HERE"
+                }
+              ]
+            },
+            "description": "Remove um dispositivo do sistema"
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Saúde do Dispositivo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices/:id/check",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices", ":id", "check"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "DEVICE_ID_HERE"
+                }
+              ]
+            },
+            "description": "Executa verificação manual de saúde do dispositivo"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Monitoring",
+      "description": "Dashboard e Logs de Monitoramento",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/monitoring/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["monitoring", "dashboard"]
+            },
+            "description": "Retorna estatísticas do dashboard - total de dispositivos, online, offline, alertas"
+          },
+          "response": []
+        },
+        {
+          "name": "Logs de Dispositivo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/monitoring/logs/:deviceId?limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["monitoring", "logs", ":deviceId"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Número máximo de logs a retornar"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": "DEVICE_ID_HERE"
+                }
+              ]
+            },
+            "description": "Retorna logs de monitoramento de um dispositivo específico"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Alerts",
+      "description": "Gerenciamento de Alertas e Notificações",
+      "item": [
+        {
+          "name": "Enviar Alerta (Email)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"DEVICE_ID_HERE\",\n  \"type\": \"DEVICE_DOWN\",\n  \"channel\": \"EMAIL\",\n  \"recipient\": \"admin@empresa.com\",\n  \"message\": \"O dispositivo Router Principal está offline desde 10:30\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alerts",
+              "host": ["{{baseUrl}}"],
+              "path": ["alerts"]
+            },
+            "description": "Envia um alerta por email"
+          },
+          "response": []
+        },
+        {
+          "name": "Enviar Alerta (SMS)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"DEVICE_ID_HERE\",\n  \"type\": \"DEVICE_DOWN\",\n  \"channel\": \"SMS\",\n  \"recipient\": \"+5511999999999\",\n  \"message\": \"ALERTA: Router Principal offline!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alerts",
+              "host": ["{{baseUrl}}"],
+              "path": ["alerts"]
+            },
+            "description": "Envia um alerta por SMS"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos Alertas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/alerts",
+              "host": ["{{baseUrl}}"],
+              "path": ["alerts"]
+            },
+            "description": "Lista todos os alertas do sistema"
+          },
+          "response": []
+        },
+        {
+          "name": "Alertas por Dispositivo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/alerts/device/:deviceId",
+              "host": ["{{baseUrl}}"],
+              "path": ["alerts", "device", ":deviceId"],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": "DEVICE_ID_HERE"
+                }
+              ]
+            },
+            "description": "Lista alertas de um dispositivo específico"
+          },
+          "response": []
+        },
+        {
+          "name": "Alertas Pendentes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/alerts/status/PENDING",
+              "host": ["{{baseUrl}}"],
+              "path": ["alerts", "status", "PENDING"]
+            },
+            "description": "Lista alertas com status pendente"
+          },
+          "response": []
+        },
+        {
+          "name": "Alertas Enviados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/alerts/status/SENT",
+              "host": ["{{baseUrl}}"],
+              "path": ["alerts", "status", "SENT"]
+            },
+            "description": "Lista alertas já enviados"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

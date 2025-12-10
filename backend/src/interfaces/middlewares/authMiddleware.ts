@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { JwtService } from '../../infrastructure/services/auth/JwtService';
+import { PrismaUserRepository } from '../../infrastructure/repositories/PrismaUserRepository';
 
 declare global {
   namespace Express {
@@ -7,11 +8,14 @@ declare global {
       user?: {
         id: string;
         email: string;
-        role: string;
+        name: string;
       };
     }
   }
 }
+
+const jwtService = new JwtService();
+const userRepository = new PrismaUserRepository();
 
 export const authMiddleware = async (
   req: Request,
@@ -22,70 +26,34 @@ export const authMiddleware = async (
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      res.status(401).json({ error: 'Missing or invalid authorization header' });
+      res.status(401).json({ error: 'Token de autenticação não fornecido' });
       return;
     }
 
     const token = authHeader.split(' ')[1];
 
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-      res.status(500).json({ error: 'Server configuration error' });
+    // Verificar JWT
+    const payload = jwtService.verifyAccessToken(token);
+    if (!payload) {
+      res.status(401).json({ error: 'Token inválido ou expirado' });
       return;
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      res.status(401).json({ error: 'Invalid or expired token' });
+    // Buscar usuário no banco para garantir que ainda existe e está ativo
+    const user = await userRepository.findById(payload.userId);
+    if (!user || !user.isActive) {
+      res.status(401).json({ error: 'Usuário não encontrado ou inativo' });
       return;
     }
-
-    // Buscar perfil do usuário
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
 
     req.user = {
       id: user.id,
-      email: user.email || '',
-      role: profile?.role || 'viewer',
+      email: user.email,
+      name: user.name,
     };
 
     next();
   } catch (error) {
-    res.status(500).json({ error: 'Authentication error' });
+    res.status(401).json({ error: 'Erro de autenticação' });
   }
-};
-
-// Middleware para verificar se é admin
-export const adminMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  if (!req.user || req.user.role !== 'admin') {
-    res.status(403).json({ error: 'Admin access required' });
-    return;
-  }
-  next();
-};
-
-// Middleware para verificar se é admin ou operator
-export const operatorMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  if (!req.user || !['admin', 'operator'].includes(req.user.role)) {
-    res.status(403).json({ error: 'Operator access required' });
-    return;
-  }
-  next();
 };
