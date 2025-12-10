@@ -1,4 +1,4 @@
-import { User } from 'domain/entities/User';
+import { User } from '../../domain/entities/User';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import prisma from '../database/prisma';
 

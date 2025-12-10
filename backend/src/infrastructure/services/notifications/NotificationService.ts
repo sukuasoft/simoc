@@ -1,4 +1,4 @@
-import { INotificationService } from '../../application/use-cases/alert/SendAlertUseCase';
+import { INotificationService } from '../../../application/use-cases/alert/SendAlertUseCase';
 import { ResendEmailService } from './ResendEmailService';
 import { VonageSmsService } from './VonageSmsService';
 

@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { INotificationService } from '../../application/use-cases/alert/SendAlertUseCase';
+import { INotificationService } from '../../../application/use-cases/alert/SendAlertUseCase';
 
 export class ResendEmailService implements Partial<INotificationService> {
   private resend: Resend;

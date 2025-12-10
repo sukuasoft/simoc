@@ -1,5 +1,5 @@
 import { Vonage } from '@vonage/server-sdk';
-import { INotificationService } from '@application/use-cases/alert/SendAlertUseCase';
+import { INotificationService } from '../../../application/use-cases/alert/SendAlertUseCase';
 
 export class VonageSmsService implements Partial<INotificationService> {
   private vonage: Vonage;

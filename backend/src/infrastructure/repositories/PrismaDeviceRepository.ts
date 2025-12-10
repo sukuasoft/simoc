@@ -1,7 +1,7 @@
-import { IDeviceRepository } from 'domain/repositories/device-repository';
+import { CheckType, Device, DeviceStatus, DeviceType } from '../../domain/entities/device';
+import { IDeviceRepository } from '../../domain/repositories/device-repository';
 import prisma from '../database/prisma';
 import { DeviceStatus as PrismaDeviceStatus, DeviceType as PrismaDeviceType, CheckType as PrismaCheckType } from '@prisma/client';
-import { CheckType, Device, DeviceStatus, DeviceType } from 'domain/entities/device';
 
 export class PrismaDeviceRepository implements IDeviceRepository {
   private mapToDomain(data: any): Device {

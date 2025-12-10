@@ -14,14 +14,14 @@ export class UserController {
 
   async create(req: Request, res: Response): Promise<void> {
     try {
-      const { name, email } = req.body;
+      const { name, email , password, phone} = req.body;
       
       if (!name || !email) {
         res.status(400).json({ error: 'Name and email are required' });
         return;
       }
 
-      const user = await this.createUserUseCase.execute({ name, email });
+      const user = await this.createUserUseCase.execute({ name, email,password, phone });
       res.status(201).json(user);
     } catch (error) {
       res.status(400).json({ error: (error as Error).message });

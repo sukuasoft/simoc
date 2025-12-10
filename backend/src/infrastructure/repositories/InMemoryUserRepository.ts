@@ -1,7 +1,16 @@
-import { User } from '../../domain/entities/user';
-import { IUserRepository } from '../../domain/repositories/user-repository';
+import { User } from '../../domain/entities/User';
+import { IUserRepository } from '../../domain/repositories/IUserRepository';
 
 export class InMemoryUserRepository implements IUserRepository {
+  findByEmail(email: string): Promise<User | null> {
+    throw new Error('Method not implemented.');
+  }
+  findByEmailWithPassword(email: string): Promise<{ user: User; password: string; } | null> {
+    throw new Error('Method not implemented.');
+  }
+  update(user: User): Promise<User> {
+    throw new Error('Method not implemented.');
+  }
   private users: Map<string, User> = new Map();
 
   async save(user: User): Promise<User> {

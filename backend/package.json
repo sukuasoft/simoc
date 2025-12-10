@@ -1,11 +1,10 @@
 {
   "name": "simoc-backend",
   "version": "1.0.0",
-  "type": "module",
   "description": "SIMOC - Sistema de Monitoramento Corporativo",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "concurrently \"npm run build\" \"node --watch dist/app.js\"",
+    "dev": "concurrently \"tsc --watch\" \"nodemon dist/app.js\"",
     "build": "tsc",
     "start": "node dist/app.js",
     "lint": "eslint src/**/*.ts",

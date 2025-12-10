@@ -1,4 +1,4 @@
-import { IUserRepository } from '../../domain/repositories/user-repository';
+import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { UserResponseDTO } from '../dtos/UserDTO';
 
 export class GetUserUseCase {

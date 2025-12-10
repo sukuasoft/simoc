@@ -1,14 +1,15 @@
 import cron from 'node-cron';
-import type { Device, DeviceStatus } from '../../../domain/entities/device.js';
 import { CheckDeviceHealthUseCase } from '../../../application/use-cases/monitoring/CheckDeviceHealthUseCase.js';
 import { SendAlertUseCase, type INotificationService } from '../../../application/use-cases/alert/SendAlertUseCase.js';
 import type { IDeviceRepository } from '../../../domain/repositories/device-repository.js';
 import type { IMonitoringLogRepository } from '../../../domain/repositories/monitoring-log-repository.js';
 import type { IAlertRepository } from '../../../domain/repositories/alert-repository.js';
 import { HealthChecker } from './HealthChecker.js';
+import { Device, DeviceStatus } from '../../../domain/entities/device';
 
 
 export class MonitoringScheduler {
+  //@ts-ignore
   private scheduledTasks: Map<string, cron.ScheduledTask> = new Map();
   private devicePreviousStatus: Map<string, DeviceStatus> = new Map();
   private checkDeviceHealthUseCase: CheckDeviceHealthUseCase;

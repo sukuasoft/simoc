@@ -1,7 +1,7 @@
-import { IAlertRepository } from 'domain/repositories/alert-repository';
+import { Alert, AlertChannel, AlertStatus, AlertType } from '../../domain/entities/alert';
+import { IAlertRepository } from '../../domain/repositories/alert-repository';
 import prisma from '../database/prisma';
 import { AlertType as PrismaAlertType, AlertChannel as PrismaAlertChannel, AlertStatus as PrismaAlertStatus } from '@prisma/client';
-import { Alert, AlertChannel, AlertStatus, AlertType } from 'domain/entities/alert';
 
 export class PrismaAlertRepository implements IAlertRepository {
   private mapToDomain(data: any): Alert {
