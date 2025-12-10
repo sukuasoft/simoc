@@ -1,0 +1,42 @@
+{
+  "name": "simoc-backend",
+  "version": "1.0.0",
+  "description": "SIMOC - Sistema de Monitoramento Corporativo",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "lint": "eslint src/**/*.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "monitoring",
+    "network",
+    "infrastructure",
+    "alerts",
+    "ddd",
+    "typescript",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.87.1",
+    "@vonage/server-sdk": "^3.25.1",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "node-cron": "^4.2.1",
+    "resend": "^6.6.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.2",
+    "@types/node-cron": "^3.0.11",
+    "@types/uuid": "^11.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
