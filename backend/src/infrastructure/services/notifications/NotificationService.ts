@@ -1,12 +1,14 @@
 import { INotificationService } from '../../../application/use-cases/alert/SendAlertUseCase';
 import { ResendEmailService } from './ResendEmailService';
-import { VonageSmsService } from './VonageSmsService';
+import { OmbalaSmsService } from './OmbalaSmsService';
+
 
 export class NotificationService implements INotificationService {
   private emailService: ResendEmailService | null = null;
-  private smsService: VonageSmsService | null = null;
+  private ombalaSmsService: OmbalaSmsService | null = null;
 
   constructor() {
+
     // Inicializa serviços apenas se as credenciais estiverem disponíveis
     try {
       this.emailService = new ResendEmailService();
@@ -14,11 +16,14 @@ export class NotificationService implements INotificationService {
       console.warn('⚠️ Email service not configured:', (error as Error).message);
     }
 
+    // Tenta inicializar Ombala SMS
     try {
-      this.smsService = new VonageSmsService();
+      this.ombalaSmsService = new OmbalaSmsService();
+      console.log('✅ Ombala SMS service configured');
     } catch (error) {
-      console.warn('⚠️ SMS service not configured:', (error as Error).message);
+      console.warn('⚠️ Ombala SMS service not configured:', (error as Error).message);
     }
+
   }
 
   async sendEmail(to: string, subject: string, message: string): Promise<boolean> {
@@ -30,10 +35,20 @@ export class NotificationService implements INotificationService {
   }
 
   async sendSMS(to: string, message: string): Promise<boolean> {
-    if (!this.smsService) {
-      console.warn('SMS service not available');
+
+    if (this.ombalaSmsService) {
+      return this.ombalaSmsService.sendSMS(to, message);
+    }
+
+    console.warn('No SMS service available');
+    return false;
+  }
+
+  async sendScheduledSMS(to: string, message: string, scheduleDate: string): Promise<boolean> {
+    if (!this.ombalaSmsService) {
+      console.warn('Ombala SMS service not available for scheduled messages');
       return false;
     }
-    return this.smsService.sendSMS(to, message);
+    return this.ombalaSmsService.sendScheduledSMS(to, message, scheduleDate);
   }
 }

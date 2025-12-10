@@ -140,9 +140,9 @@ class App {
     // Initialize Monitoring Scheduler
     this.monitoringScheduler = new MonitoringScheduler(
       deviceRepository,
-      monitoringLogRepository,
+     monitoringLogRepository,
       alertRepository,
-      notificationService
+    notificationService
     );
   }
 
@@ -156,18 +156,18 @@ class App {
       await prisma.$connect();
       
       // Start monitoring scheduler
-      await this.monitoringScheduler?.start();
+     await this.monitoringScheduler?.start();
     } catch (error) {
       console.warn('Could not start monitoring scheduler:', (error as Error).message);
     }
 
     this.app.listen(this.port, () => {
-      console.log(`🚀 Server is running on http://localhost:${this.port}`);
+      console.log(`Server is running on http://localhost:${this.port}`);
     });
   }
 
   public async stop(): Promise<void> {
-    this.monitoringScheduler?.stop();
+   this.monitoringScheduler?.stop();
     await prisma.$disconnect();
   }
 }

@@ -21,7 +21,7 @@ export class RegisterUseCase {
     const hashedPassword = await this.passwordService.hash(data.password);
 
     // Criar usuário
-    const user = User.create(data.email, data.name, data.phone, hashedPassword);
+    const user = User.create(data.email, data.name, hashedPassword,  data.phone);
     const savedUser = await this.userRepository.save(user);
 
     // Gerar token

@@ -42,7 +42,6 @@ export class HealthChecker implements IHealthChecker {
 
   private async pingCheck(device: Device, startTime: number): Promise<CheckResult> {
     try {
-      // Usar ping do sistema operacional
       const command = process.platform === 'win32'
         ? `ping -n 1 -w ${device.timeout} ${device.host}`
         : `ping -c 1 -W ${Math.ceil(device.timeout / 1000)} ${device.host}`;

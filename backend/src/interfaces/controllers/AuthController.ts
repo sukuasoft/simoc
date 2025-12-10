@@ -12,8 +12,8 @@ export class AuthController {
     try {
       const { email, password, name, phone } = req.body;
 
-      if (!email || !password || !name) {
-        res.status(400).json({ error: 'Email, senha e nome são obrigatórios' });
+      if (!email || !password || !name || !phone) {
+        res.status(400).json({ error: 'Email, senha, nome e telefone são obrigatórios' });
         return;
       }
 
@@ -29,6 +29,7 @@ export class AuthController {
         ...result,
       });
     } catch (error) {
+        console.log(error);
       const message = (error as Error).message;
       if (message.includes('já está em uso')) {
         res.status(409).json({ error: message });
